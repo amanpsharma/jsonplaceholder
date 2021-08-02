@@ -106,7 +106,7 @@ const Users = (props) => {
           </div>
         </Fade>
       </Modal>
-      {console.log(props.users.userList)}
+      {console.log(props.users.userList,'ssss')}
     </div>
   );
 };

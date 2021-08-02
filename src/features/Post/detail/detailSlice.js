@@ -21,11 +21,8 @@ export const postDetailSlice = createSlice({
   reducers: {
     getTitle: (state, action) => {
       state.title = action.payload;
-      console.log(action);
       localStorage.setItem("title", action.payload.title);
       localStorage.setItem("body", action.payload.body);
-
-      // console.log(state, action);
     },
   },
   extraReducers: {

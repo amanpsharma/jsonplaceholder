@@ -20,9 +20,10 @@ export const photoDetailSlice = createSlice({
   initialState,
   reducers: {
     getTitle: (state, action) => {
+      console.log(action)
       state.title = action.payload;
-      localStorage.setItem("photoTitle", action.payload);
-      // console.log(state, action);
+      localStorage.setItem("photoTitle", action.payload.title);
+      localStorage.setItem("user", action.payload.user);
     },
   },
   extraReducers: {

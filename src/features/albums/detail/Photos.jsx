@@ -8,14 +8,20 @@ import {
 } from "@material-ui/core";
 import { useSelector } from "react-redux";
 
-import Loader from '../../../app/components/layouts/Loading'
+import Loader from "../../../app/components/layouts/Loading";
 const Photos = () => {
   const { loading } = useSelector((state) => state.photo);
 
   const data = JSON.parse(localStorage.getItem("photoDetails"));
-  return loading ? <Loader/> : (
+  return loading ? (
+    <Loader />
+  ) : (
     <div>
+      <Typography variant="h4">Photo Details</Typography>
+      <hr />
       <Typography variant="h4">{localStorage.getItem("photoTitle")}</Typography>
+      <hr />
+      <Typography variant="h4">{localStorage.getItem("user")}</Typography>
       <div
         style={{
           display: "flex",
@@ -27,7 +33,7 @@ const Photos = () => {
         {data.length > 0 &&
           data.map((item) => {
             return (
-              <div style={{ margin: 5 }} key={Math.random()} >
+              <div style={{ margin: 5 }} key={Math.random()}>
                 <Card style={{ width: 200, height: 320 }}>
                   <CardActionArea>
                     <CardMedia

@@ -38,7 +38,7 @@ const Post = () => {
     <Loader />
   ) : (
     <div>
-      <Typography variant="h5">POST </Typography>
+      <Typography variant="h5">POST </Typography><hr/>
       {postList.length > 0 &&
         postList.map((item) => {
           return (

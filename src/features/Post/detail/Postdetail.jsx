@@ -22,13 +22,19 @@ const Postdetail = () => {
     <Loader />
   ) : (
     <div>
+      <Typography variant="h4">Post Details</Typography>
+      <hr />
       <Typography variant="h4">{localStorage.getItem("title")}</Typography>
+      <hr />
       <Typography variant="h5">{localStorage.getItem("body")}</Typography>
-      <Typography variant="h6" color="error" >Comments</Typography>
+      <Typography variant="h6" color="error">
+        Comments
+      </Typography>
+      <hr />
 
       {JSON.parse(localStorage.getItem("postDetails")).map((item) => {
         return (
-          <Paper className={classes.paper} key={Math.random()} key={item.id} >
+          <Paper className={classes.paper} key={Math.random()}>
             <Grid xl={3}>
               <Typography variant="body2">{item.email}</Typography>
               <Typography variant="h6">{item.name}</Typography>

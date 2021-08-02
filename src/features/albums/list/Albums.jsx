@@ -39,18 +39,24 @@ const Albums = () => {
   const [search, setSearch] = useState("");
   const [data, setDate] = useState([]);
   const [userId, setUserId] = React.useState("");
+  const [userarr, seteserarr] = useState([]);
 
-  const handleChange = (event) => {
-    const value = event.target.value;
-    setUserId(value);
-    // dispatch(filterAlbumByUser(value));
-    if (value !== "") {
-      const searchAlbum = albumList.filter((user) => user.userId === value);
-      setDate(searchAlbum);
-    } else {
-      setDate(albumList);
+  useEffect(() => {
+    const filtered = [];
+    for (var arr in albumList) {
+      for (var filter in userList) {
+        if (albumList[arr].userId === userList[filter].id) {
+          filtered.push({
+            id: albumList[arr].id,
+            title: albumList[arr].title,
+            userName: userList[filter].username,
+            userId: userList[filter].id,
+          });
+        }
+      }
     }
-  };
+    seteserarr(filtered);
+  }, [userList, albumList]);
 
   useEffect(() => {
     dispatch(getAlbums());
@@ -61,7 +67,7 @@ const Albums = () => {
     var searchQuery = e.target.value;
     setSearch(searchQuery);
     if (searchQuery !== "") {
-      const newUser = albumList.filter((user) => {
+      const newUser = userarr.filter((user) => {
         return Object.values(user)
           .join("")
           .toLowerCase()
@@ -69,14 +75,15 @@ const Albums = () => {
       });
       setDate(newUser);
     } else {
-      setDate(albumList);
+      setDate(userarr);
     }
   };
-  let albumData = search.length > 1 ? data : userId > 0 ? data : albumList;
+  let albumData = search.length > 1 ? data : userId > 0 ? data : userarr;
 
-  const albumDetail = (id, title) => {
+  const albumDetail = (id, title, username) => {
+    const getDetailsUser = { title: title, user: username };
     dispatch(getPhoto(id));
-    dispatch(getTitle(title));
+    dispatch(getTitle(getDetailsUser));
     history.push(`/photodetails/${id}`);
   };
   const userListSelect =
@@ -87,7 +94,16 @@ const Albums = () => {
         title: item.username,
       };
     });
-
+  const handleChange = (event) => {
+    const value = event.target.value;
+    setUserId(value);
+    if (value !== "") {
+      const searchAlbum = userarr.filter((user) => user.userId === value);
+      setDate(searchAlbum);
+    } else {
+      setDate(userarr);
+    }
+  };
   return loading ? (
     <Loader />
   ) : (
@@ -137,13 +153,16 @@ const Albums = () => {
               className={classes.paper}
               key={Math.random()}
               onClick={() => {
-                albumDetail(item.id, item.title);
+                albumDetail(item.id, item.title, item.userName);
               }}
               style={{ cursor: "pointer" }}
             >
               <List xl={3}>
                 <Typography variant="h6" color="secondary">
                   {item.title}
+                </Typography>
+                <Typography variant="h6" color="primary">
+                  {item.userName}
                 </Typography>
               </List>
             </Paper>
