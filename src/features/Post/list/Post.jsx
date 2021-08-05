@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Loader from "../../../app/components/layouts/Loading";
 import { useHistory } from "react-router-dom";
 import { getComment, getTitle } from "../detail/detailSlice";
+import { getPostjson } from "../postreducers";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -22,23 +23,25 @@ const Post = () => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
-  const { postList, loading } = useSelector((state) => state.post);
-
+  // const { postList, loading } = useSelector((state) => state.post);
+  const { postList, loading } = useSelector((state) => state.newpostReducer);
   useEffect(() => {
-    dispatch(getPosts());
+    // dispatch(getPosts());
+    dispatch(getPostjson());
   }, [dispatch]);
 
   const postDetail = (id, title, body) => {
     dispatch(getComment(id));
-    const comment = {title, body}
+    const comment = { title, body };
     dispatch(getTitle(comment));
     history.push(`/postdetails/${id}`);
   };
-  return loading ? (
+  return !postList.length > 0 ? (
     <Loader />
   ) : (
     <div>
-      <Typography variant="h5">POST </Typography><hr/>
+      <Typography variant="h5">POST </Typography>
+      <hr />
       {postList.length > 0 &&
         postList.map((item) => {
           return (

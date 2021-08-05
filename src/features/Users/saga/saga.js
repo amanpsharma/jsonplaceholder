@@ -1,55 +1,81 @@
-import { put, call, takeLatest } from "redux-saga/effects";
-//import { getUsers } from '../services/users.api.js'
-//export const getUsers = () => fetch('https://jsonplaceholder.typicode.com/users')
+import { call, put, takeLatest } from "redux-saga/effects";
+import {
+  setUser,
+  DELETE_USER,
+  GET_USERJSON,
+  sucessdeleteUser,
+  CREATE_USER,
+  sucessCreateUser,
+  sucessUpdateUser,
+  UPDATE_USER,
+  SELECT_SINGLE_USER,
+  UpdateUser,
+} from "./reducers";
+import axios from "axios";
 
-// 1
-/*
-function* getUsersSaga() {
-  //const res = yield call(getUsers)
-  //const res = yield call(() => fetch('https://jsonplaceholder.typicode.com/users'))
-  const res = yield call(fetch, 'https://jsonplaceholder.typicode.com/users')
-  const data = yield res.json()
-
-  yield put({ type: 'GET_USERS_SUCCESS', payload: data })
-}
-*/
-
-// https://redux-saga.js.org/docs/basics/ErrorHandling.html
-
-// 2
-
-function* getUsersSaga() {
+const requestDeleteUser = (userId) => {
+  return axios.delete(`${process.env.REACT_APP_BASEURL}users/${userId.userId}`);
+};
+const requestGetUser = () => {
+  return axios.get(`${process.env.REACT_APP_BASEURL}users`);
+};
+const requestCreateUser = (action) => {
+  console.log(action);
+  const body = action.action;
+  return axios.post(`${process.env.REACT_APP_BASEURL}users`, {
+    body,
+  });
+};
+const requestUpdateUser = (action) => {
+  console.log(action.action.id, "updatesisisisi");
+  // const {id} = action.action
+  console.log(action, "mujjjj");
+  const body = action.action;
+  return axios.put(
+    `${process.env.REACT_APP_BASEURL}users/${action.action.id}`,
+    {
+      body,
+    }
+  );
+};
+export function* handleDeleteUser(userId) {
   try {
-    const res = yield call(fetch, 'https://jsonplaceholder.typicode.com/users')
-    const data = yield res.json()
-    yield put({ type: 'GET_USERS_SUCCESS', payload: data })
-  } catch (e) {
-    console.log('error: ', e.message)
-    //yield put({ type: 'GET_USERS_FAILED', message: e.message })
+    const response = yield call(requestDeleteUser, userId);
+    const { data } = response;
+    yield put(sucessdeleteUser(data, userId));
+  } catch (error) {
+    console.log(error);
   }
 }
-
-
-// 3
-// const getUsers = (val) => {
-//   console.log(val);
-//   return fetch("https://jsonplaceholder.typicode.com/users")
-//     .then((response) => ({ response }))
-//     .catch((error) => ({ error }));
-// };
-
-// function* getUsersSaga(val) {
-//   console.log(val);
-//   const { response, error } = yield call(getUsers);
-//   if (response) {
-//     const data = yield response.json();
-//     yield put({ type: "GET_USERS_SUCCESS", payload: data });
-//   } else {
-//     console.log("error: ", error.message);
-//     //yield put({ type: 'GET_USERS_FAILED', message: error.message })
-//   }
-// }
-
-export default function* rootSaga() {
-  yield [takeLatest("GET_USERS_REQUEST", getUsersSaga)];
+export function* handleGetUser(action) {
+  try {
+    const response = yield call(requestGetUser);
+    const { data } = response;
+    yield put(setUser(data));
+  } catch (error) {
+    console.log(error);
+  }
+}
+export function* handleCreateUser(action) {
+  try {
+    const response = yield call(requestCreateUser, action);
+    yield put(sucessCreateUser(response.data.body));
+  } catch (error) {
+    console.log(error);
+  }
+}
+export function* handleUpdateUser(action) {
+  try {
+    const response = yield call(requestUpdateUser, action);
+    // console.log(response,'response')
+    yield put(UpdateUser(response.data.body));
+  } catch (error) {
+    console.log(error);
+  }
+}
+export function* watcherSaga() {
+  yield takeLatest(DELETE_USER, handleDeleteUser);
+  yield takeLatest(GET_USERJSON, handleGetUser);
+  yield takeLatest(CREATE_USER, handleCreateUser);
+  yield takeLatest(UPDATE_USER, handleUpdateUser);
 }

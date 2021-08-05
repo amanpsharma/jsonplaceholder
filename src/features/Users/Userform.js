@@ -4,7 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { useForm, Controller } from "react-hook-form";
 import { makeStyles } from "@material-ui/core/styles";
-import { saveUsers, editUsers, editUserSingle } from "./userSlice";
+import { editUsers, editUserSingle } from "./userSlice";
+import { createUser, sucessUpdateUser } from "./saga/reducers";
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -30,19 +31,21 @@ const Userform = () => {
       zipcode: "",
     },
   });
-  const { singleUser } = useSelector((state) => state.users);
+  // const { singleUser } = useSelector((state) => state.users);
+  const { singleUser } = useSelector((state) => state.newUserReducer);
   const dispatch = useDispatch();
   React.useEffect(() => {
     reset(singleUser);
   }, [singleUser, reset]);
 
   const callApi = (data) => {
-    dispatch(editUserSingle(data.id, data));
-    dispatch(editUsers(data.id, data));
+    // dispatch(editUserSingle(data.id, data));
+    dispatch(sucessUpdateUser(data.id, data));
   };
   const onSubmit = (data) => {
-    console.log(data, "singleUser.length");
-    data.id ? callApi(data) : dispatch(saveUsers(data));
+    console.log(data.id, "singleUser.length");
+    // const 
+    data.id ? dispatch(sucessUpdateUser(data)) : dispatch(createUser(data));
   };
 
   const classes = useStyles();

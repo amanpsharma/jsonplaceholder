@@ -5,8 +5,12 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import Typography from "@material-ui/core/Typography";
 import { useDispatch } from "react-redux";
-import { openModal, deleteUsers,selectSingleUsers } from "./userSlice";
-
+import { openModal, deleteUsers, selectSingleUsers } from "./userSlice";
+import {
+  deleteUser,
+  selectSingleUserJson,
+  openModalSaga,
+} from "./saga/reducers";
 import { Button } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,11 +29,14 @@ const Userlist = ({ user }) => {
 
   const classes = useStyles();
   const selectSingleUser = (user, id) => {
-    dispatch(openModal(id, user));
-    dispatch(selectSingleUsers(id));
+    console.log(user);
+    const actionUser = { id, user };
+    dispatch(selectSingleUserJson(actionUser));
+    dispatch(openModalSaga(true));
   };
   const handleDelete = (id) => {
-    dispatch(deleteUsers(id));
+    // dispatch(deleteUsers(id));
+    dispatch(deleteUser(id));
   };
   return (
     <div>
