@@ -85,7 +85,7 @@ const Users = (props) => {
           return <Userlist key={Math.random()} user={user} />;
         })
       ) : (
-        <Notfound subject="USER NOT FOUND..." />
+        <Notfound subject="USER NOT FOUND SEARCH MORE..." />
       )}
       <Modal
         className={classes.modal}
